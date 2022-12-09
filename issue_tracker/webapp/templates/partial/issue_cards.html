@@ -8,7 +8,11 @@
               {% if not forloop.last %}, {% endif %}
               {% endfor %}
           </h6>
-          <h6><a href="{% url 'issue_detail' issue.pk %}" class="card-link"><i class="fa fa-info-circle" aria-hidden="true"></i></a> <- details</h6>
+          <h6>
+              <a href="{% url 'issue_detail' issue.pk %}" class="card-link"><i class="fa fa-info-circle" aria-hidden="true"></i></a> <- details
+              <a href="{% url 'update_issue' issue.pk %}" class="card-link"><i class="fa-solid fa-pen-to-square"></i></a>
+              <a href="{% url 'delete_issue' issue.pk %}" class="card-link"><i class="fa-solid fa-trash"></i></a>
+          </h6>
       </div>
     </div>
     <p></p>

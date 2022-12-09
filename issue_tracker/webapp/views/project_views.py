@@ -1,12 +1,11 @@
 from django.db.models import Q
-from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
 from django.views.generic.list import MultipleObjectMixin
 from django.utils.http import urlencode
-
 from webapp.models import Project
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from webapp.forms import ProjectForm, SearchForm
-from webapp.views import CustomSearchView
+
 
 
 class ProjectView(ListView):
@@ -57,7 +56,7 @@ class ProjectDetailView(DetailView, MultipleObjectMixin):
 
     def get_context_data(self, **kwargs):
         project = self.object
-        issues = project.issues.order_by('-created_at')
+        issues = project.issues.filter(is_deleted=False).order_by('-created_at')
         context = super(ProjectDetailView, self).get_context_data(object_list=issues, **kwargs)
         return context
 
@@ -66,3 +65,17 @@ class CreateProjectView(CreateView):
     template_name = "projects/create.html"
     model = Project
     form_class = ProjectForm
+
+
+class UpdateProjectView(UpdateView):
+    template_name = 'projects/update.html'
+    form_class = ProjectForm
+    model = Project
+    context_object_name = 'project'
+
+
+class DeleteProjectView(DeleteView):
+    template_name = 'projects/delete.html'
+    model = Project
+    context_object_name = 'project'
+    success_url = reverse_lazy('project_list')

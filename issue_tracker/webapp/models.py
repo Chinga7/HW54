@@ -26,6 +26,7 @@ class Issue(models.Model):
     type = models.ManyToManyField('webapp.Type', related_name='issues', blank=True)
     status = models.ForeignKey('webapp.Status', on_delete=models.PROTECT, related_name='status', verbose_name='Status')
     project = models.ForeignKey('webapp.Project', on_delete=models.CASCADE, related_name='issues', verbose_name='projects')
+    is_deleted = models.BooleanField(default=False)
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Update At')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Created At')
 
