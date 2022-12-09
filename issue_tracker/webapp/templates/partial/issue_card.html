@@ -9,6 +9,8 @@
               {% endfor %}
           </h6>
           <p class="card-text">{{ issue.description|linebreaks }}</p>
+          <a href="{% url 'update_issue' issue.pk %}" class="card-link"><i class="fa-solid fa-pen-to-square"></i></a>
+          <a href="{% url 'delete_issue' issue.pk %}" class="card-link"><i class="fa-solid fa-trash"></i></a>
       </div>
     </div>
     <p></p>

@@ -1,26 +1,18 @@
 from django.db.models import Q
-from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
 from django.views.generic.list import MultipleObjectMixin
 from django.utils.http import urlencode
-
 from webapp.models import Project
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from webapp.forms import ProjectForm, SearchForm
-from webapp.views import CustomSearchView
 
 
 class ProjectView(ListView):
     template_name = 'projects/project_list.html'
     model = Project
     context_object_name = 'projects'
-    ordering = ('-created_at')
     paginate_by = 3
     paginate_orphans = 1
-
-    # def get_context_data(self, *, object_list=None, **kwargs):
-    #     context = super().get_context_data(object_list=object_list, **kwargs)
-    #     context['form'] = SearchForm
-    #     return context
 
     def get(self, request, *args, **kwargs):
         self.form = self.get_search_form()
@@ -53,11 +45,10 @@ class ProjectDetailView(DetailView, MultipleObjectMixin):
     template_name = 'projects/project.html'
     model = Project
     paginate_by = 3
-    # context_object_name = 'issues'
 
     def get_context_data(self, **kwargs):
         project = self.object
-        issues = project.issues.order_by('-created_at')
+        issues = project.issues.filter(is_deleted=False).order_by('-created_at')
         context = super(ProjectDetailView, self).get_context_data(object_list=issues, **kwargs)
         return context
 
@@ -66,3 +57,17 @@ class CreateProjectView(CreateView):
     template_name = "projects/create.html"
     model = Project
     form_class = ProjectForm
+
+
+class UpdateProjectView(UpdateView):
+    template_name = 'projects/update.html'
+    form_class = ProjectForm
+    model = Project
+    context_object_name = 'project'
+
+
+class DeleteProjectView(DeleteView):
+    template_name = 'projects/delete.html'
+    model = Project
+    context_object_name = 'project'
+    success_url = reverse_lazy('project_list')
