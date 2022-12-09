@@ -7,19 +7,12 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from webapp.forms import ProjectForm, SearchForm
 
 
-
 class ProjectView(ListView):
     template_name = 'projects/project_list.html'
     model = Project
     context_object_name = 'projects'
-    ordering = ('-created_at')
     paginate_by = 3
     paginate_orphans = 1
-
-    # def get_context_data(self, *, object_list=None, **kwargs):
-    #     context = super().get_context_data(object_list=object_list, **kwargs)
-    #     context['form'] = SearchForm
-    #     return context
 
     def get(self, request, *args, **kwargs):
         self.form = self.get_search_form()
@@ -52,7 +45,6 @@ class ProjectDetailView(DetailView, MultipleObjectMixin):
     template_name = 'projects/project.html'
     model = Project
     paginate_by = 3
-    # context_object_name = 'issues'
 
     def get_context_data(self, **kwargs):
         project = self.object
